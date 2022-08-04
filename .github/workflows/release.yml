@@ -1,0 +1,25 @@
+name: Lanzar nueva versión
+
+on:
+  push:
+    tags:
+      - "v*"
+
+jobs:
+
+  publicar:
+
+    runs-on: windows-latest
+
+    steps:
+    - name: Instalación del repositorio 
+      uses: actions/checkout@v3
+      with:
+        fetch-depth: 0
+
+    - name: Publicar nueva versión del Launcher
+      uses: marvinpinto/action-automatic-releases@latest
+      with:
+        repo_token: "${{ secrets.GITHUB_TOKEN }}"
+        prerelease: false
+        files: Deployment/Releases/*

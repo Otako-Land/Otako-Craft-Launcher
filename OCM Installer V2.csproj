@@ -1,0 +1,71 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<OutputType>WinExe</OutputType>
+		<TargetFramework>net6.0-windows</TargetFramework>
+		<RootNamespace>OCM_Installer_V2</RootNamespace>
+		<Nullable>enable</Nullable>
+		<UseWPF>true</UseWPF>
+		<ApplicationIcon>icono.ico</ApplicationIcon>
+		<AssemblyName>Otako Craft Launcher</AssemblyName>
+		<ApplicationManifest>app.manifest</ApplicationManifest>
+	</PropertyGroup>
+
+	<ItemGroup>
+	  <None Remove="bkgrnd.png" />
+	  <None Remove="bkgrnd2.png" />
+	  <None Remove="navbkgrnd.png" />
+	  <None Remove="ocmlogomenu.png" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<Content Include="icono.ico" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<PackageReference Include="Clowd.Squirrel" Version="2.9.42" />
+		<PackageReference Include="CmlLib.Core" Version="3.3.5" />
+		<PackageReference Include="CmlLib.Core.Auth.Microsoft.UI.Wpf" Version="2.0.2" />
+		<PackageReference Include="Downloader" Version="2.3.5" />
+		<PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
+		<PackageReference Include="NuGet.CommandLine" Version="6.2.1">
+			<PrivateAssets>all</PrivateAssets>
+			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+		</PackageReference>
+		<PackageReference Include="WPF-UI" Version="2.0.2" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Reference Include="Wpf.Ui">
+	    <HintPath>..\..\..\..\.nuget\packages\wpf-ui\2.0.2\lib\net6.0-windows7.0\Wpf.Ui.dll</HintPath>
+	  </Reference>
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Resource Include="bkgrnd.png" />
+	  <Resource Include="bkgrnd2.png" />
+	  <Resource Include="navbkgrnd.png" />
+	  <Resource Include="ocmlogomenu.png" />
+	</ItemGroup>
+
+	<PropertyGroup>
+		<NugetTools>$(PkgNuGet_CommandLine)\tools</NugetTools>
+		<SquirrelTools>$(PkgClowd_Squirrel)\tools</SquirrelTools>
+
+		<Version>1.0.0</Version>
+
+		<NuspecFile>$(SolutionDir)OCMInstallerV2.nuspec</NuspecFile>
+
+		<PlatformTarget>AnyCPU</PlatformTarget>
+	</PropertyGroup>
+
+	<Target Name="GenerateRelease" AfterTargets="AfterBuild" Condition="$(Configuration) == Release">
+		<XmlPeek XmlInputPath="$(NuspecFile)" Query="/package/metadata/id/text()">
+			<Output TaskParameter="Result" ItemName="ID" />
+		</XmlPeek>
+
+		<Exec Command="$(NugetTools)\NuGet.exe pack &quot;$(NuspecFile)&quot; -Version $(Version) -Properties Configuration=Release -OutputDirectory &quot;$(SolutionDir)Deployment\GeneratedNugets&quot;" />
+
+		<Exec Command="$(SquirrelTools)\Squirrel.exe releasify --package=&quot;$(SolutionDir)Deployment\GeneratedNugets\@(ID).$(Version).nupkg&quot; --releaseDir=&quot;$(SolutionDir)Deployment\Releases&quot; --framework net6.0.2 --icon &quot;icono.ico&quot; --splashImage &quot;ocmlogomenu.png&quot;" />
+	</Target>
+</Project>

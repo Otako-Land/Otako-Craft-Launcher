@@ -1,0 +1,4 @@
+﻿[*.{cs,vb}]
+
+# IDE0040: Agregar modificadores de accesibilidad
+dotnet_diagnostic.IDE0040.severity = none

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<package >
+  <metadata>
+    <id>OtakoCraftLauncher</id>
+    <version>0.0.0</version>
+    <title>Otako Craft Launcher</title>
+    <authors>The Ghost</authors>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <license type="expression">MIT</license>
+    <projectUrl>https://github.com/Otako-Land/Otako-Craft-Launcher</projectUrl>
+    <description>Launcher de Otako Craft</description>
+    <releaseNotes>Cositas</releaseNotes>
+    <copyright>$copyright$</copyright>
+  </metadata>
+  
+  <files>
+    <file src="bin\Release\net6.0-windows\**" target="lib\net6.0.2"/>
+  </files>
+</package>

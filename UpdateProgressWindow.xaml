@@ -1,0 +1,30 @@
+﻿<Window
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:OCM_Installer_V2"
+        xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml" x:Class="OCM_Installer_V2.UpdateProgressWindow"
+        mc:Ignorable="d"
+        Title="Otako Craft Launcher" Height="329" Width="1102" HorizontalAlignment="Center" VerticalAlignment="Center" WindowStyle="None" ResizeMode="NoResize" ShowInTaskbar="False" SizeToContent="WidthAndHeight" WindowStartupLocation="CenterScreen" Focusable="False" Topmost="True">
+    <Window.Background>
+        <ImageBrush ImageSource="/bkgrnd.png" Stretch="UniformToFill"/>
+    </Window.Background>
+    <Grid HorizontalAlignment="Center" VerticalAlignment="Center" Height="330" Width="1102">
+        <Label Content="Actualizando Launcher..." VerticalAlignment="Top" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Height="61" FontWeight="Bold" FontStyle="Italic" FontSize="42" Background="Transparent" Foreground="White" Canvas.Left="314" Canvas.Top="28" Margin="0,22,0,0">
+            <Label.Effect>
+                <DropShadowEffect/>
+            </Label.Effect>
+        </Label>
+        <Image x:Name="OCMLogo" HorizontalAlignment="Center" Height="100" VerticalAlignment="Top" Width="892" Source="/ocmlogomenu.png" Stretch="UniformToFill" Canvas.Left="105" Canvas.Top="125" Margin="0,112,0,0"/>
+        <ui:ProgressRing HorizontalAlignment="Center" Margin="0,223,0,0" VerticalAlignment="Top" IsIndeterminate="True" Height="93" Width="93">
+            <ui:ProgressRing.Foreground>
+                <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                    <GradientStop Color="Magenta"/>
+                    <GradientStop Color="Cyan" Offset="1"/>
+                </LinearGradientBrush>
+            </ui:ProgressRing.Foreground>
+        </ui:ProgressRing>
+    </Grid>
+
+</Window>
