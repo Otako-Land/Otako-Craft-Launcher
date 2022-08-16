@@ -7,21 +7,23 @@ using CmlLib.Core.Auth;
 using CmlLib.Core.Auth.Microsoft.UI.Wpf;
 using Downloader;
 using Squirrel;
-using System.Threading;
 using System.IO;
+using System.Net.Http;
 
 namespace OCM_Installer_V2
 {
     public partial class Inicio
     {
-        UpdateManager man;
+        UpdateManager man = new GithubUpdateManager(@"https://github.com/Otako-Land/Otako-Craft-Launcher");
+        HttpClient httpClient = new();
+        bool packUpdate = false;
 
-        private void MessageBox_LeftButtonClick(object sender, System.Windows.RoutedEventArgs e)
+        private void MessageBox_LeftButtonClick(object sender, RoutedEventArgs e)
         {
             (sender as Wpf.Ui.Controls.MessageBox)?.Close();
         }
 
-        private void MessageBox_RightButtonClick(object sender, System.Windows.RoutedEventArgs e)
+        private void MessageBox_RightButtonClick(object sender, RoutedEventArgs e)
         {
             (sender as Wpf.Ui.Controls.MessageBox)?.Close();
         }
@@ -29,11 +31,32 @@ namespace OCM_Installer_V2
         public Inicio()
         {
             InitializeComponent();
-            man = new GithubUpdateManager(@"https://github.com/Otako-Land/Otako-Craft-Launcher");
-            var launcherLocation = man.AppDirectory;
-            if (Directory.Exists(launcherLocation + @"\Otako Craft Mods\mods"))
+            try
             {
-                PlayButton.IsEnabled = true;
+                var launcherLocation = man.AppDirectory;
+                var latestPackVersion = httpClient.GetStringAsync("https://otcr.tk/packversion.txt").Result;
+                string packVersionFile = launcherLocation + @"\PackVersion.txt";
+
+                if (File.Exists(packVersionFile))
+                {
+                    string localPackVersion = File.ReadAllText(packVersionFile);
+                    if (!localPackVersion.Equals(latestPackVersion)) packUpdate = true; else packUpdate = false;
+                }
+                else
+                {
+                    var cf = File.Create(packVersionFile);
+                    cf.Close();
+                    packUpdate = true;
+                }
+
+                if (Directory.Exists(launcherLocation + @"\Otako Craft Mods\mods") && !packUpdate) PlayButton.IsEnabled = true;
+                else if (!Directory.Exists(launcherLocation + @"\Otako Craft Mods\mods")) PlayButton.Content = "Instala todo primero";
+                else if (packUpdate) { PlayButton.Content = "Actualización disponible"; Instalar_todo.Content = "Actualizar y jugar"; }
+            }
+            catch (Exception err)
+            {
+                new Util.Reporter().ReportError(err.ToString());
+                return;
             }
         }
 
@@ -63,7 +86,7 @@ namespace OCM_Installer_V2
             }));
         }
 
-        private async void InstallAllButton_Click(object sender, RoutedEventArgs e)
+        private void InstallAllButton_Click(object sender, RoutedEventArgs e)
         {
             var computerMemory = Util.GetMemoryMb();
             if (computerMemory == null)
@@ -73,13 +96,6 @@ namespace OCM_Installer_V2
             }
             var max = computerMemory / 2;
             if (max <= 4096) max = 4096; else if (max > 8192) max = 8192;
-            var messageBox = new Wpf.Ui.Controls.MessageBox
-            {
-                ButtonLeftName = "Ok",
-                ButtonRightName = "Messirve"
-            };
-            messageBox.ButtonLeftClick += Util.MessageBox_LeftButtonClick;
-            messageBox.ButtonRightClick += Util.MessageBox_RightButtonClick;
             System.Net.ServicePointManager.DefaultConnectionLimit = 256;
             var launcherLocation = man.AppDirectory;
             var downloader = new DownloadService();
@@ -94,22 +110,33 @@ namespace OCM_Installer_V2
                 LoadingText = "Cargando...\nEspera un momento plis :D",
                 Title = "Iniciar sesión con tu cuenta de Microsoft | ¿Para qué? Para abrir el juego usando tu cuenta :)"
             };
-            MSession session = await loginWindow.ShowLoginDialog();
-            loginWindow.Close();
 
             Application.Current.Dispatcher.Invoke(new Action(async () =>
             {
                 try
                 {
+                    if (Directory.Exists(launcherLocation + @"\Otako Craft Mods\mods")) { Directory.Delete(launcherLocation + @"\Otako Craft Mods\mods", true); PlayButton.IsEnabled = false; }
+                    MSession session = await loginWindow.ShowLoginDialog();
+                    loginWindow.Close();
+                    LogoutButton.IsEnabled = false;
                     Instalar_todo.FontSize = 17;
                     Instalar_todo.Content = "Descargando mods y otros archivos";
                     Instalar_todo.IsEnabled = false;
                     await downloader.DownloadFileTaskAsync("https://otcr.tk/pack.zip", launcherLocation + @"\Otako Craft Mods\pack.zip");
                     System.IO.Compression.ZipFile.ExtractToDirectory(launcherLocation + @"\Otako Craft Mods\pack.zip", launcherLocation + @"\Otako Craft Mods", true);
+                    Util.WriteCustomModConfigs();
                     DownloadedFiles.Visibility = Visibility.Visible;
                     DownloadedFilePercentage.Visibility = Visibility.Visible;
                     Instalar_todo.FontSize = 13.5;
                     Instalar_todo.Content = "Descargando y comprobando archivos del juego";
+                    File.Delete(launcherLocation + @"\Otako Craft Mods\pack.zip");
+                    if (packUpdate)
+                    {
+                        var launcherLocation = man.AppDirectory;
+                        var latestPackVersion = httpClient.GetStringAsync("https://otcr.tk/packversion.txt").Result;
+                        string packVersionFile = launcherLocation + @"\PackVersion.txt";
+                        File.WriteAllText(packVersionFile, latestPackVersion);
+                    }
                     var ses = new MSession(session.Username, session.AccessToken, session.UUID);
                     var process = await launcher.CreateProcessAsync("Otako Craft Mods", new MLaunchOption()
                     {
@@ -121,19 +148,21 @@ namespace OCM_Installer_V2
                         StartVersion = new CmlLib.Core.Version.MVersion("Otako Craft Mods")
                     });
                     process.Start();
-                    Thread.Sleep(1000);
                     Environment.Exit(0);
                 }
                 catch (Exception err)
                 {
-                    messageBox.Show("Reporta este error a The Ghost por favor", err.ToString());
+                    if (!err.Message.Contains("The user has denied access") && !err.Message.Contains("User cancelled login"))
+                    {
+                        new Util.Reporter().ReportError(err.ToString());
+                    }
                     return;
                 }
             }));
         }
 
 
-        private async void PlayButton_Click(object sender, RoutedEventArgs e)
+        private void PlayButton_Click(object sender, RoutedEventArgs e)
         {
             var computerMemory = Util.GetMemoryMb();
             if (computerMemory == null)
@@ -143,13 +172,6 @@ namespace OCM_Installer_V2
             }
             var max = computerMemory / 2;
             if (max <= 4096) max = 4096; else if (max > 8192) max = 8192;
-            var messageBox = new Wpf.Ui.Controls.MessageBox
-            {
-                ButtonLeftName = "Ok",
-                ButtonRightName = "Messirve"
-            };
-            messageBox.ButtonLeftClick += Util.MessageBox_LeftButtonClick;
-            messageBox.ButtonRightClick += Util.MessageBox_RightButtonClick;
             System.Net.ServicePointManager.DefaultConnectionLimit = 256;
             var launcherLocation = man.AppDirectory;
             var path = new MinecraftPath(launcherLocation + @"\Otako Craft Mods");
@@ -159,32 +181,36 @@ namespace OCM_Installer_V2
                 LoadingText = "Cargando...\nEspera un momento plis :D",
                 Title = "Iniciar sesión con tu cuenta de Microsoft | ¿Para qué? Para abrir el juego usando tu cuenta :)"
             };
-            MSession session = await loginWindow.ShowLoginDialog();
-            loginWindow.Close();
 
             Application.Current.Dispatcher.Invoke(new Action(async () =>
             {
                 try
                 {
+                    MSession session = await loginWindow.ShowLoginDialog();
+                    loginWindow.Close();
+                    LogoutButton.IsEnabled = false;
+                    Instalar_todo.IsEnabled = false;
+                    PlayButton.IsEnabled = false;
+                    PlayButton.Content = " Cargando juego...";
                     var ses = new MSession(session.Username, session.AccessToken, session.UUID);
                     var process = await launcher.CreateProcessAsync("Otako Craft Mods", new MLaunchOption()
                     {
                         GameLauncherName = "Otako Craft Launcher",
                         Session = ses,
                         Path = path,
-                        MaximumRamMb = 4096,
+                        MaximumRamMb = (int)max,
                         VersionType = "Otako Craft",
                         StartVersion = new CmlLib.Core.Version.MVersion("Otako Craft Mods")
                     });
-                    PlayButton.IsEnabled = false;
-                    PlayButton.Content = "Comprobando archivos";
                     process.Start();
-                    Thread.Sleep(1000);
                     Environment.Exit(0);
                 }
                 catch (Exception err)
                 {
-                    messageBox.Show("Reporta este error a The Ghost por favor", err.ToString());
+                    if (!err.Message.Contains("The user has denied access") && !err.Message.Contains("User cancelled login"))
+                    {
+                        new Util.Reporter().ReportError(err.ToString());
+                    }
                     return;
                 }
             }));
@@ -208,25 +234,20 @@ namespace OCM_Installer_V2
                 };
                 MSession session = await loginWindow.ShowLoginDialog();
                 loginWindow.Close();
-                messageBox.Show("Bromita", "Hola " + session.Username + "\nGracias por regalarme tu cuenta de Minecraft :D" + "\nxd");
-                loginWindow.Close();
+                messageBox.Show("Bromita", "Hola " + session.Username + "\n¿Todo bien?" + "\nxd");
             }
             catch (Exception err)
             {
-                messageBox.Show("Reporta este error a The Ghost por favor", err.ToString());
+                if (!err.Message.Contains("The user has denied access") && !err.Message.Contains("User cancelled login"))
+                {
+                    new Util.Reporter().ReportError(err.ToString());
+                }
                 return;
             }
         }
 
         private void LogoutButton_Click(object sender, RoutedEventArgs e)
         {
-            var messageBox = new Wpf.Ui.Controls.MessageBox
-            {
-                ButtonLeftName = "Ok",
-                ButtonRightName = "Messirve"
-            };
-            messageBox.ButtonLeftClick += Util.MessageBox_LeftButtonClick;
-            messageBox.ButtonRightClick += Util.MessageBox_RightButtonClick;
             try
             {
                 MicrosoftLoginWindow logoutWindow = new()
@@ -235,12 +256,11 @@ namespace OCM_Installer_V2
                     Title = "Cerrar sesión de tu cuenta de Microsoft"
                 };
                 logoutWindow.ShowLogoutDialog();
-                messageBox.Show("Sesión cerrada", "Has cerrado sesión.");
                 logoutWindow.Close();
             }
             catch (Exception err)
             {
-                messageBox.Show("Reporta este error a The Ghost por favor", err.ToString());
+                new Util.Reporter().ReportError(err.ToString());
                 return;
             }
         }

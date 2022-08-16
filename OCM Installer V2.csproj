@@ -12,10 +12,12 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-	  <None Remove="bkgrnd.png" />
-	  <None Remove="bkgrnd2.png" />
-	  <None Remove="navbkgrnd.png" />
-	  <None Remove="ocmlogomenu.png" />
+	  <None Remove="images/btnbkg.png" />
+	  <None Remove="images/mnbkg.png" />
+	  <None Remove="images/navbkgrnd.png" />
+	  <None Remove="images/ocmlogomenu.png" />
+	  <None Remove="images/udbkg.png" />
+	  <None Remove="images\splash.png" />
 	</ItemGroup>
 
 	<ItemGroup>
@@ -42,10 +44,17 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <Resource Include="bkgrnd.png" />
-	  <Resource Include="bkgrnd2.png" />
-	  <Resource Include="navbkgrnd.png" />
-	  <Resource Include="ocmlogomenu.png" />
+	  <Resource Include="images/mnbkg.png" />
+	  <Resource Include="images/btnbkg.png" />
+	  <Resource Include="images/udbkg.png" />
+	  <Resource Include="images/navbkgrnd.png" />
+	  <Resource Include="images/ocmlogomenu.png" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <SplashScreen Include="images\splash.png">
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </SplashScreen>
 	</ItemGroup>
 
 	<PropertyGroup>
@@ -57,6 +66,8 @@
 		<NuspecFile>$(SolutionDir)OCMInstallerV2.nuspec</NuspecFile>
 
 		<PlatformTarget>AnyCPU</PlatformTarget>
+
+		<Copyright></Copyright>
 	</PropertyGroup>
 
 	<Target Name="GenerateRelease" AfterTargets="AfterBuild" Condition="$(Configuration) == Release">
@@ -66,6 +77,6 @@
 
 		<Exec Command="$(NugetTools)\NuGet.exe pack &quot;$(NuspecFile)&quot; -Version $(Version) -Properties Configuration=Release -OutputDirectory &quot;$(SolutionDir)Deployment\GeneratedNugets&quot;" />
 
-		<Exec Command="$(SquirrelTools)\Squirrel.exe releasify --package=&quot;$(SolutionDir)Deployment\GeneratedNugets\@(ID).$(Version).nupkg&quot; --releaseDir=&quot;$(SolutionDir)Deployment\Releases&quot; --framework net6.0.2 --icon &quot;icono.ico&quot; --splashImage &quot;ocmlogomenu.png&quot;" />
+		<Exec Command="$(SquirrelTools)\Squirrel.exe releasify --package=&quot;$(SolutionDir)Deployment\GeneratedNugets\@(ID).$(Version).nupkg&quot; --releaseDir=&quot;$(SolutionDir)Deployment\Releases&quot; --framework net6.0.2 --icon &quot;icono.ico&quot; --splashImage &quot;images/inslogo.png&quot;" />
 	</Target>
 </Project>

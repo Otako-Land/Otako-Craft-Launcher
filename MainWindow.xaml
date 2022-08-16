@@ -10,12 +10,12 @@
         Height="530" Width="1092"
         MouseDown="Window_MouseDown">
 
-    <Border BorderThickness="0">
+    <Border BorderThickness="0" BorderBrush="Transparent">
         <Border.Background>
-            <ImageBrush Stretch="UniformToFill" ImageSource="/bkgrnd2.png"/>
+            <ImageBrush Stretch="UniformToFill" ImageSource="images/mnbkg.png"/>
         </Border.Background>
         <Grid>
-            <Image HorizontalAlignment="Center" Height="84" VerticalAlignment="Top" Width="682" Source="/ocmlogomenu.png" Stretch="Uniform" Margin="0,24,0,0"/>
+            <Image HorizontalAlignment="Center" Height="84" VerticalAlignment="Top" Width="682" Source="images/ocmlogomenu.png" Stretch="Uniform" Margin="0,24,0,0"/>
             <ui:TitleBar HorizontalAlignment="Right" Width="95" RenderTransformOrigin="0.5,0.5" Height="30" ShowMaximize="False" CanMaximize="False" AllowDrop="True" Focusable="True" OverridesDefaultStyle="False" Title="CerrarMinimizar">
                 <ui:TitleBar.Effect>
                     <DropShadowEffect/>
@@ -30,7 +30,7 @@
                 </ui:TitleBar.RenderTransform>
             </ui:TitleBar>
             <ui:NavigationStore HorizontalAlignment="Left" VerticalAlignment="Center" Height="290" Width="64"
-                                x:Name="RootNavigation" Background="{x:Null}" Foreground="{x:Null}" Margin="7,0,0,0" Frame="{Binding ElementName=MainFrame, Mode=OneWay}">
+                                x:Name="RootNavigation" Margin="7,0,0,0" Frame="{Binding ElementName=MainFrame, Mode=OneWay}" Background="{x:Null}" Foreground="{x:Null}">
                 <ui:NavigationStore.Effect>
                     <DropShadowEffect/>
                 </ui:NavigationStore.Effect>
@@ -50,7 +50,7 @@
             </ui:NavigationStore>
             <Label x:Name="CurrentVersion" Content="v0.0.0" HorizontalAlignment="Left" VerticalAlignment="Top" FontSize="18" Height="31" Width="67" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Margin="1025,499,0,0" Foreground="White"/>
             <Frame x:Name="MainFrame" Margin="119,105,119,21"/>
-            <Image x:Name="NavBackground" HorizontalAlignment="Left" Height="310" VerticalAlignment="Center" Width="159" Stretch="Uniform" StretchDirection="DownOnly" Source="/navbkgrnd.png" Margin="-67,0,0,0" Panel.ZIndex="-1">
+            <Image x:Name="NavBackground" HorizontalAlignment="Left" Height="310" VerticalAlignment="Center" Width="159" Stretch="Uniform" StretchDirection="DownOnly" Source="images/navbkgrnd.png" Margin="-67,0,0,0" Panel.ZIndex="-1">
                 <Image.Effect>
                     <BlurEffect/>
                 </Image.Effect>

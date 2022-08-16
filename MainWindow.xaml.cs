@@ -2,42 +2,32 @@
 using System.Windows;
 using Squirrel;
 using System.Windows.Input;
-using System.Threading;
 
 namespace OCM_Installer_V2
 {
     public partial class MainWindow
     {
-        UpdateManager manager;
+        UpdateManager manager = new GithubUpdateManager(@"https://github.com/Otako-Land/Otako-Craft-Launcher");
         Inicio Inicio = new();
 
         public MainWindow()
         {
             InitializeComponent();
-            manager = new GithubUpdateManager(@"https://github.com/Otako-Land/Otako-Craft-Launcher");
             try
             {
                 UpdateHandler.HandleInstallEvents();
                 UpdateProgressWindow.CheckAndInstall();
 
                 CurrentVersion.Content = "v" + manager.CurrentlyInstalledVersion().ToString();
+                MainFrame.Navigate(Inicio);
+                RootNavigation.Visibility = Visibility.Hidden;
+                NavBackground.Visibility = Visibility.Hidden;
             }
             catch (Exception err)
             {
-                var messageBox = new Wpf.Ui.Controls.MessageBox
-                {
-                    ButtonLeftName = "Ok",
-                    ButtonRightName = "Messirve"
-                };
-                messageBox.ButtonLeftClick += Util.MessageBox_LeftButtonClick;
-                messageBox.ButtonRightClick += Util.MessageBox_RightButtonClick;
-                messageBox.ResizeMode = ResizeMode.NoResize;
-                messageBox.Show("Reporta este error a The Ghost por favor", err.ToString());
+                new Util.Reporter().ReportError(err.ToString());
                 return;
             }
-            MainFrame.Navigate(Inicio);
-            RootNavigation.Visibility = Visibility.Hidden;
-            NavBackground.Visibility = Visibility.Hidden;
         }
         private void Window_MouseDown(object sender, MouseButtonEventArgs e)
         {

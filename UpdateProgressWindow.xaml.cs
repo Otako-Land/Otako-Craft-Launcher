@@ -13,8 +13,7 @@ namespace OCM_Installer_V2
 
         public static async void CheckAndInstall()
         {
-            UpdateManager manager;
-            manager = new GithubUpdateManager(@"https://github.com/Otako-Land/Otako-Craft-Launcher");
+            UpdateManager manager = new GithubUpdateManager(@"https://github.com/Otako-Land/Otako-Craft-Launcher");
             try
             {
                 var updateInfo = await manager.CheckForUpdate();

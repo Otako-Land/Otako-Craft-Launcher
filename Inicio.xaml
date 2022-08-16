@@ -47,11 +47,7 @@
                 </LinearGradientBrush>
             </ProgressBar.Foreground>
         </ProgressBar>
-        <Label x:Name="ProgresoLabel" Content="0%" HorizontalAlignment="Left" Margin="394,314,0,0" VerticalAlignment="Top" FontSize="18" FontWeight="Bold" Foreground="Magenta" Width="78" FlowDirection="LeftToRight" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Visibility="Hidden" >
-            <Label.Effect>
-                <DropShadowEffect/>
-            </Label.Effect>
-        </Label>
+        <Label x:Name="ProgresoLabel" Content="0%" HorizontalAlignment="Left" Margin="388,314,0,0" VerticalAlignment="Top" FontSize="18" FontWeight="Bold" Foreground="White" Width="90" FlowDirection="LeftToRight" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Height="26" Visibility="Hidden"   />
         <ui:Button x:Name="LoginButton" Content="Iniciar sesión" Margin="92,224,0,0" VerticalAlignment="Top" Height="64" Width="293" FontWeight="UltraLight" FontSize="31" FontFamily="Impact" FontStyle="Normal" Click="LoginButton_Click" Icon="Link48" IconFilled="True" HorizontalContentAlignment="Center" VerticalContentAlignment="Center">
             <ui:Button.IconForeground>
                 <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
@@ -78,7 +74,7 @@
                 <DropShadowEffect/>
             </ui:Button.Effect>
             <ui:Button.Background>
-                <ImageBrush ImageSource="/bkgrnd.png" Stretch="UniformToFill"/>
+                <ImageBrush ImageSource="images/btnbkg.png" Stretch="UniformToFill"/>
             </ui:Button.Background>
         </ui:Button>
         <ui:Button x:Name="LogoutButton" Content="Cerrar sesión" Margin="92,118,0,0" VerticalAlignment="Top" Height="66" Width="293" FontWeight="UltraLight" FontSize="31" FontFamily="Impact" FontStyle="Normal" Click="LogoutButton_Click" Icon="Link48" IconFilled="True" HorizontalContentAlignment="Center" VerticalContentAlignment="Center">
@@ -107,7 +103,7 @@
                 <DropShadowEffect/>
             </ui:Button.Effect>
             <ui:Button.Background>
-                <ImageBrush ImageSource="/bkgrnd.png" Stretch="UniformToFill"/>
+                <ImageBrush ImageSource="images/btnbkg.png" Stretch="UniformToFill"/>
             </ui:Button.Background>
         </ui:Button>
 

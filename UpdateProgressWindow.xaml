@@ -8,7 +8,7 @@
         mc:Ignorable="d"
         Title="Otako Craft Launcher" Height="329" Width="1102" HorizontalAlignment="Center" VerticalAlignment="Center" WindowStyle="None" ResizeMode="NoResize" ShowInTaskbar="False" SizeToContent="WidthAndHeight" WindowStartupLocation="CenterScreen" Focusable="False" Topmost="True">
     <Window.Background>
-        <ImageBrush ImageSource="/bkgrnd.png" Stretch="UniformToFill"/>
+        <ImageBrush ImageSource="images/udbkg.png" Stretch="UniformToFill"/>
     </Window.Background>
     <Grid HorizontalAlignment="Center" VerticalAlignment="Center" Height="330" Width="1102">
         <Label Content="Actualizando Launcher..." VerticalAlignment="Top" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Height="61" FontWeight="Bold" FontStyle="Italic" FontSize="42" Background="Transparent" Foreground="White" Canvas.Left="314" Canvas.Top="28" Margin="0,22,0,0">
@@ -16,8 +16,8 @@
                 <DropShadowEffect/>
             </Label.Effect>
         </Label>
-        <Image x:Name="OCMLogo" HorizontalAlignment="Center" Height="100" VerticalAlignment="Top" Width="892" Source="/ocmlogomenu.png" Stretch="UniformToFill" Canvas.Left="105" Canvas.Top="125" Margin="0,112,0,0"/>
-        <ui:ProgressRing HorizontalAlignment="Center" Margin="0,223,0,0" VerticalAlignment="Top" IsIndeterminate="True" Height="93" Width="93">
+        <Image x:Name="OCMLogo" HorizontalAlignment="Center" Height="94" VerticalAlignment="Top" Width="778" Source="images/ocmlogomenu.png" Canvas.Left="105" Canvas.Top="125" Margin="0,102,0,0"/>
+        <ui:ProgressRing HorizontalAlignment="Center" Margin="0,210,0,0" VerticalAlignment="Top" IsIndeterminate="True" Height="100" Width="100">
             <ui:ProgressRing.Foreground>
                 <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
                     <GradientStop Color="Magenta"/>
