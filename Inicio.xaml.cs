@@ -89,11 +89,7 @@ namespace OCM_Installer_V2
         private void InstallAllButton_Click(object sender, RoutedEventArgs e)
         {
             var computerMemory = Util.GetMemoryMb();
-            if (computerMemory == null)
-            {
-                computerMemory = 4096;
-                return;
-            }
+            if (computerMemory == null) { computerMemory = 4096; return; }
             var max = computerMemory / 2;
             if (max <= 4096) max = 4096; else if (max > 8192) max = 8192;
             System.Net.ServicePointManager.DefaultConnectionLimit = 256;
@@ -164,12 +160,13 @@ namespace OCM_Installer_V2
 
         private void PlayButton_Click(object sender, RoutedEventArgs e)
         {
+            LogoutButton.IsEnabled = false;
+            Instalar_todo.IsEnabled = false;
+            PlayButton.IsEnabled = false;
+            PlayButton.Content = "Cargando juego...";
+            
             var computerMemory = Util.GetMemoryMb();
-            if (computerMemory == null)
-            {
-                computerMemory = 4096;
-                return;
-            }
+            if (computerMemory == null) { computerMemory = 4096; return; }
             var max = computerMemory / 2;
             if (max <= 4096) max = 4096; else if (max > 8192) max = 8192;
             System.Net.ServicePointManager.DefaultConnectionLimit = 256;
@@ -188,10 +185,6 @@ namespace OCM_Installer_V2
                 {
                     MSession session = await loginWindow.ShowLoginDialog();
                     loginWindow.Close();
-                    LogoutButton.IsEnabled = false;
-                    Instalar_todo.IsEnabled = false;
-                    PlayButton.IsEnabled = false;
-                    PlayButton.Content = " Cargando juego...";
                     var ses = new MSession(session.Username, session.AccessToken, session.UUID);
                     var process = await launcher.CreateProcessAsync("Otako Craft Mods", new MLaunchOption()
                     {
