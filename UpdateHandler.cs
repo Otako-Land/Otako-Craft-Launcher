@@ -29,8 +29,6 @@ namespace OCM_Installer_V2
             static void OnAppRun(SemanticVersion version, IAppTools tools, bool firstRun)
             {
                 tools.SetProcessAppUserModelId();
-
-                if (firstRun) MessageBox.Show("Con este Launcher no necesitarás tener nada más instalado para jugar a Otako Craft Mods.", "Bienvenido al Otako Craft Launcher");
             }
         }
     }

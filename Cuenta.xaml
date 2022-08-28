@@ -1,0 +1,70 @@
+﻿<ui:UiPage xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml" x:Class="OCM_Installer_V2.Cuenta"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      mc:Ignorable="d" 
+      Title="Cuenta" HorizontalAlignment="Center" VerticalAlignment="Center"
+      Tag="Cuenta" WindowTitle="Cuenta">
+
+    <Grid Width="854" Height="425" HorizontalAlignment="Center" VerticalAlignment="Center">
+        <ui:Button x:Name="LoginButton" Content="Iniciar sesión" Margin="0,222,0,0" VerticalAlignment="Top" Height="90" Width="370" FontWeight="UltraLight" FontSize="37" FontFamily="Impact" FontStyle="Normal" Click="LoginButton_Click" Icon="Link48" IconFilled="True" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" HorizontalAlignment="Center">
+            <ui:Button.IconForeground>
+                <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                    <LinearGradientBrush.RelativeTransform>
+                        <TransformGroup>
+                            <ScaleTransform CenterY="0.5" CenterX="0.5"/>
+                            <SkewTransform CenterX="0.5" CenterY="0.5"/>
+                            <RotateTransform Angle="90" CenterX="0.5" CenterY="0.5"/>
+                            <TranslateTransform/>
+                        </TransformGroup>
+                    </LinearGradientBrush.RelativeTransform>
+                    <GradientStop Color="Magenta"/>
+                    <GradientStop Color="Cyan" Offset="1"/>
+                </LinearGradientBrush>
+            </ui:Button.IconForeground>
+            <ui:Button.Foreground>
+                <LinearGradientBrush>
+                    <GradientStop Color="Magenta" Offset="0"/>
+                    <GradientStop Color="Magenta"/>
+                    <GradientStop Color="#FF04FAFF" Offset="1"/>
+                </LinearGradientBrush>
+            </ui:Button.Foreground>
+            <ui:Button.Effect>
+                <DropShadowEffect/>
+            </ui:Button.Effect>
+            <ui:Button.Background>
+                <ImageBrush ImageSource="images/btnbkg.png" Stretch="UniformToFill"/>
+            </ui:Button.Background>
+        </ui:Button>
+        <ui:Button x:Name="LogoutButton" Content="Cerrar sesión" Margin="0,60,0,0" VerticalAlignment="Top" Height="90" Width="370" FontWeight="UltraLight" FontSize="37" FontFamily="Impact" FontStyle="Normal" Click="LogoutButton_Click" Icon="Link48" IconFilled="True" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" HorizontalAlignment="Center">
+            <ui:Button.IconForeground>
+                <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                    <LinearGradientBrush.RelativeTransform>
+                        <TransformGroup>
+                            <ScaleTransform CenterY="0.5" CenterX="0.5"/>
+                            <SkewTransform CenterX="0.5" CenterY="0.5"/>
+                            <RotateTransform Angle="90" CenterX="0.5" CenterY="0.5"/>
+                            <TranslateTransform/>
+                        </TransformGroup>
+                    </LinearGradientBrush.RelativeTransform>
+                    <GradientStop Color="Cyan"/>
+                    <GradientStop Color="Magenta" Offset="1"/>
+                </LinearGradientBrush>
+            </ui:Button.IconForeground>
+            <ui:Button.Foreground>
+                <LinearGradientBrush>
+                    <GradientStop Color="Magenta" Offset="1"/>
+                    <GradientStop Color="Magenta" Offset="1"/>
+                    <GradientStop Color="#FF04FAFF" Offset="0"/>
+                </LinearGradientBrush>
+            </ui:Button.Foreground>
+            <ui:Button.Effect>
+                <DropShadowEffect/>
+            </ui:Button.Effect>
+            <ui:Button.Background>
+                <ImageBrush ImageSource="images/btnbkg.png" Stretch="UniformToFill"/>
+            </ui:Button.Background>
+        </ui:Button>
+    </Grid>
+</ui:UiPage>

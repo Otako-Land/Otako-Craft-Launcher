@@ -1,5 +1,4 @@
-﻿#pragma warning disable CS8618
-#pragma warning disable SYSLIB0014
+﻿#pragma warning disable SYSLIB0014
 using System;
 using System.Collections.Specialized;
 using System.Net;
@@ -8,13 +7,25 @@ using System.IO;
 using Squirrel;
 using System.Collections.Generic;
 using System.Net.Http;
-using System.Threading.Tasks;
-using System.Windows;
 
 namespace OCM_Installer_V2
 {
     public partial class Util
     {
+        public static class Globals
+        {
+            public static readonly string AppDirectory = new GithubUpdateManager(@"https://github.com/Otako-Land/Otako-Craft-Launcher").AppDirectory;
+            static readonly string file = AppDirectory + @"\CustomLocation.txt";
+            public static readonly string CustomLocation = IsUsingCustomInstLoc() ? File.ReadAllText(file) : AppDirectory;
+        }
+
+        public static bool IsUsingCustomInstLoc()
+        {
+            string file = Globals.AppDirectory + @"\CustomLocation.txt";
+            if (File.Exists(file)) return true;
+            else return false;
+        }
+
         public static void MessageBox_LeftButtonClick(object sender, System.Windows.RoutedEventArgs e)
         {
             (sender as Wpf.Ui.Controls.MessageBox)?.Close();
@@ -47,44 +58,42 @@ namespace OCM_Installer_V2
 
         public class Reporter : IDisposable
         {
-            private readonly WebClient dWebClient;
-            private static NameValueCollection discord = new NameValueCollection();
+            private readonly WebClient wc;
+            private static readonly NameValueCollection wHook = new();
 
             public Reporter()
             {
-                dWebClient = new WebClient();
+                wc = new WebClient();
             }
 
             public void ReportError(string error)
             {
-                discord.Add("username", "Error");
-                discord.Add("content", error);
+                wHook.Add("username", "Error");
+                wHook.Add("content", "-------\n`" + Environment.UserName + "`\n-------\n" + "```csharp \n" + error + "\n ```");
 
-                dWebClient.UploadValues("https://discord.com/api/webhooks/925151107926327366/mnU5JgkoPo3bdrQe1HnkAbSXDD_3rZvXZ27n6KEkJRcOeXYQorQcuB6QD9hHwD41Usgj", discord);
+                wc.UploadValues("https://discord.com/api/webhooks/925151107926327366/mnU5JgkoPo3bdrQe1HnkAbSXDD_3rZvXZ27n6KEkJRcOeXYQorQcuB6QD9hHwD41Usgj", wHook);
             }
 
             public void Dispose()
             {
-                dWebClient.Dispose();
+                wc.Dispose();
             }
         }
 
         public static async void WriteCustomModConfigs()
         {
-            UpdateManager man = new GithubUpdateManager(@"https://github.com/Otako-Land/Otako-Craft-Launcher");
             HttpClient httpClient = new();
             var configsD = await httpClient.GetStringAsync("https://otcr.tk/customConfigs.txt");
-            var launcherLocation = man.AppDirectory;
-            var config = launcherLocation + @"\Otako Craft Mods\config\";
-            string regFile = config + "NoMeElimines.txt";
+            var cfg = Globals.CustomLocation + @"\Otako Craft Mods\config\";
+            string regFile = cfg + "NoMeElimines.txt";
             string[] configFiles =
             {
-                config + @"dsurround\dsurround.cfg",
-                config + @"travelersbackpack.cfg",
-                config + @"ichunutil.cfg",
-                launcherLocation + @"\Otako Craft Mods\options.txt",
-                config + @"securitycraft.cfg",
-                config + @"emoticons\config.json"
+                cfg + @"dsurround\dsurround.cfg",
+                cfg + @"travelersbackpack.cfg",
+                cfg + @"ichunutil.cfg",
+                Globals.CustomLocation + @"\Otako Craft Mods\options.txt",
+                cfg + @"securitycraft.cfg",
+                cfg + @"emoticons\config.json"
             };
             string[] configs = configsD.Split("|");
             List<string> configFilesList = new(configFiles);
@@ -93,12 +102,12 @@ namespace OCM_Installer_V2
             {
                 try
                 {
-                    var cf = 
-                        File.Create(regFile); 
-                        File.Create(config + "quark.cfg");
+                    var cf =
+                        File.Create(regFile);
+                    File.Create(cfg + "quark.cfg");
                     cf.Close();
-                    Directory.CreateDirectory(config + "dsurround");
-                    Directory.CreateDirectory(config + "emoticons");
+                    Directory.CreateDirectory(cfg + "dsurround");
+                    Directory.CreateDirectory(cfg + "emoticons");
                     string regCnt = await File.ReadAllTextAsync(regFile);
 
                     TextWriter tw = new StreamWriter(regFile, true);
@@ -142,6 +151,19 @@ namespace OCM_Installer_V2
                     return;
                 }
             }
+        }
+
+        public static void ShowMessageBox(string title, string message, string? btnLeft = null, string? btnRight = null)
+        {
+            var messageBox = new Wpf.Ui.Controls.MessageBox
+            {
+                ButtonLeftName = btnLeft is null ? "Ok" : btnLeft,
+                ButtonRightName = btnRight is null ? "Messirve" : btnRight,
+            };
+            messageBox.ButtonLeftClick += MessageBox_LeftButtonClick;
+            messageBox.ButtonRightClick += MessageBox_RightButtonClick;
+
+            messageBox.Show(title, message);
         }
     }
 }

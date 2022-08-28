@@ -1,11 +1,12 @@
-﻿<ui:UiWindow x:Class="OCM_Installer_V2.MainWindow"
+﻿<ui:UiWindow
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+        xmlns:local="clr-namespace:OCM_Installer_V2" x:Class="OCM_Installer_V2.MainWindow"
         mc:Ignorable="d"
         Title="Otako Craft Launcher" ResizeMode="NoResize" WindowStartupLocation="CenterScreen" AllowsTransparency="True"
-        xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
         WindowStyle="None"
         Height="530" Width="1092"
         MouseDown="Window_MouseDown">
@@ -29,16 +30,27 @@
                     </TransformGroup>
                 </ui:TitleBar.RenderTransform>
             </ui:TitleBar>
-            <ui:NavigationStore HorizontalAlignment="Left" VerticalAlignment="Center" Height="290" Width="64"
-                                x:Name="RootNavigation" Margin="7,0,0,0" Frame="{Binding ElementName=MainFrame, Mode=OneWay}" Background="{x:Null}" Foreground="{x:Null}">
+            <ui:NavigationStore HorizontalAlignment="Left" VerticalAlignment="Center" Height="298" Width="64"
+                                x:Name="RootNavigation" Margin="8,4,0,0" Frame="{Binding ElementName=MainFrame, Mode=OneWay}" Background="{x:Null}" Foreground="{x:Null}">
                 <ui:NavigationStore.Effect>
                     <DropShadowEffect/>
                 </ui:NavigationStore.Effect>
                 <ui:NavigationStore.Items>
-                    <ui:NavigationItem
+                    <ui:NavigationItem x:Name="NavInicio"
                         Content="Inicio"
-                        Icon="Home24"
-                        PageTag="Inicio" Foreground="Cyan" IconSize="35" VerticalAlignment="Top" Width="64" Click="NavigationItem_Click">
+                        Icon="Home48"
+                        PageTag="Inicio" Foreground="Cyan" IconSize="35" VerticalAlignment="Top" Width="64" Click="NavigationItem_Inicio_Click">
+                        <ui:NavigationItem.IconForeground>
+                            <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                                <GradientStop Color="Magenta"/>
+                                <GradientStop Color="Cyan" Offset="1"/>
+                            </LinearGradientBrush>
+                        </ui:NavigationItem.IconForeground>
+                    </ui:NavigationItem>
+                    <ui:NavigationItem x:Name="NavCuenta"
+                        Content="Cuenta"
+                        Icon="Person48"
+                        PageTag="Cuenta" Foreground="Cyan" IconSize="35" VerticalAlignment="Top" Width="64" Click="NavigationItem_Cuenta_Click" Cursor="Hand">
                         <ui:NavigationItem.IconForeground>
                             <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
                                 <GradientStop Color="Magenta"/>
@@ -47,9 +59,22 @@
                         </ui:NavigationItem.IconForeground>
                     </ui:NavigationItem>
                 </ui:NavigationStore.Items>
+                <ui:NavigationStore.Footer>
+                    <ui:NavigationItem x:Name="NavAjustes"
+                        Content="Ajustes"
+                        Icon="Settings48"
+                        PageTag="Ajustes" Foreground="Cyan" IconSize="35" Width="64" Click="NavigationItem_Ajustes_Click" Cursor="Hand">
+                        <ui:NavigationItem.IconForeground>
+                            <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                                <GradientStop Color="Magenta"/>
+                                <GradientStop Color="Cyan" Offset="1"/>
+                            </LinearGradientBrush>
+                        </ui:NavigationItem.IconForeground>
+                    </ui:NavigationItem>
+                </ui:NavigationStore.Footer>
             </ui:NavigationStore>
             <Label x:Name="CurrentVersion" Content="v0.0.0" HorizontalAlignment="Left" VerticalAlignment="Top" FontSize="18" Height="31" Width="67" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Margin="1025,499,0,0" Foreground="White"/>
-            <Frame x:Name="MainFrame" Margin="119,105,119,21"/>
+            <Frame x:Name="MainFrame" Margin="119,105,119,0"/>
             <Image x:Name="NavBackground" HorizontalAlignment="Left" Height="310" VerticalAlignment="Center" Width="159" Stretch="Uniform" StretchDirection="DownOnly" Source="images/navbkgrnd.png" Margin="-67,0,0,0" Panel.ZIndex="-1">
                 <Image.Effect>
                     <BlurEffect/>
