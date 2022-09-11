@@ -3,14 +3,19 @@ using CmlLib.Core.Auth;
 using System;
 using System.Windows;
 using static OCM_Installer_V2.Util;
+using System.IO;
 
 namespace OCM_Installer_V2
 {
     public partial class Cuenta
     {
+        readonly string usernameFile = Globals.AppDirectory + @"\Username.txt";
+
         public Cuenta()
         {
             InitializeComponent();
+            
+            if (!File.Exists(usernameFile)) { var f = File.Create(usernameFile); f.Close(); } else CustomUsername.Text = File.ReadAllText(usernameFile);
         }
 
         private async void LoginButton_Click(object sender, RoutedEventArgs e)
@@ -53,6 +58,12 @@ namespace OCM_Installer_V2
                 new Reporter().ReportError(err.ToString());
                 return;
             }
+        }
+
+        private void CustomUsername_TextChanged(object sender, System.Windows.Controls.TextChangedEventArgs e)
+        {
+            if (!File.Exists(usernameFile)) { var f = File.Create(usernameFile); f.Close(); }
+            File.WriteAllText(usernameFile, CustomUsername.Text);
         }
     }
 }

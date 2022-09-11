@@ -1,10 +1,10 @@
 ﻿using Squirrel;
-using System.Threading;
+using System;
+using System.Diagnostics;
 using System.IO;
 using System.Windows;
 using System.Windows.Forms;
 using static OCM_Installer_V2.Util;
-using System;
 
 namespace OCM_Installer_V2
 {
@@ -35,7 +35,8 @@ namespace OCM_Installer_V2
             {
                 var fContent = File.ReadAllText(file);
                 ShowMessageBox("Ubicación actual para las instalaciones y descargas", "La ubicación actual es:\n" + fContent);
-            } else ShowMessageBox("No establecido", "No has establecido una ubicación personalizada.");
+            }
+            else ShowMessageBox("No establecido", "No has establecido una ubicación personalizada.");
         }
 
         private void ResetCustomInstallLocationBtn_Click(object sender, RoutedEventArgs e)
@@ -47,6 +48,45 @@ namespace OCM_Installer_V2
         private void RestartBtn_Click(object sender, RoutedEventArgs e)
         {
             UpdateManager.RestartApp();
+        }
+
+        private void ShowShadersFolder_Click(object sender, RoutedEventArgs e)
+        {
+
+            // ACCESO DENEGADO
+
+            try
+            {
+                Process.Start(Globals.CustomLocation + @"\Otako Craft Mods\shaderpacks");
+            }
+            catch (Exception err)
+            {
+                new Reporter().ReportError(err.ToString());
+                return;
+            }
+        }
+
+        private void SelectShadersFile_Click(object sender, RoutedEventArgs e)
+        {
+
+            // ACCESO DENEGADO
+
+            OpenFileDialog fbd = new();
+            if (fbd.ShowDialog() == DialogResult.OK)
+            {
+                try
+                {
+                    string selectedFile = fbd.FileName;
+                    File.Move(selectedFile, Globals.CustomLocation + @"\Otako Craft Mods\shaderpacks");
+                    ShowMessageBox("Operación terminada", "Se ha movido el archivo seleccionado a la carpeta de shaders.");
+                }
+                catch (Exception err)
+                {
+                    new Reporter().ReportError(err.ToString());
+                    return;
+                }
+
+            }
         }
     }
 }

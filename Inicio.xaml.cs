@@ -8,36 +8,37 @@ using Downloader;
 using System.IO;
 using System.Net.Http;
 using static OCM_Installer_V2.Util;
-using System.Threading;
 
 namespace OCM_Installer_V2
 {
     public partial class Inicio
     {
+        readonly Cuenta Cuenta = new();
         readonly HttpClient httpClient = new();
-        readonly Ajustes Ajustes = new();
         readonly bool packUpdate = false;
         readonly string installPath = Globals.CustomLocation;
+        readonly string packVersionFile = Globals.CustomLocation + @"\Otako Craft Mods\PackVersion.txt";
+        readonly string usernameFile = Globals.AppDirectory + @"\Username.txt";
 
         public Inicio()
         {
             InitializeComponent();
             try
             {
-                var latestPackVersion = httpClient.GetStringAsync("https://otcr.tk/packversion.txt").Result;
-                string packVersionFile = Globals.AppDirectory + @"\PackVersion.txt";
+                string latestPackVersion = httpClient.GetStringAsync("https://otcr.tk/packversion.txt").Result;
 
                 if (!File.Exists(packVersionFile))
                 {
+                    Directory.CreateDirectory(Globals.CustomLocation + @"\Otako Craft Mods");
                     var cf = File.Create(packVersionFile);
                     cf.Close();
                 }
                 string localPackVersion = File.ReadAllText(packVersionFile);
 
-                if (localPackVersion != string.Empty && !localPackVersion.Equals(latestPackVersion)) packUpdate = true;
-
-                if (Directory.Exists(installPath + @"\Otako Craft Mods\mods") && !packUpdate) PlayButton.IsEnabled = true; else PlayButton.Content = "Instala todo primero";
-                if (packUpdate) { PlayButton.Content = "Actualización disponible"; Instalar_todo.Content = "Actualizar y jugar"; }
+                if (File.Exists(Globals.AppDirectory + @"\CustomLocation.txt") && string.IsNullOrEmpty(localPackVersion)) File.WriteAllText(packVersionFile, latestPackVersion);
+                if (!string.IsNullOrEmpty(localPackVersion) && !localPackVersion.Equals(latestPackVersion)) packUpdate = true;
+                if (Directory.Exists(installPath + @"\Otako Craft Mods\mods") && !packUpdate && Directory.GetFiles(installPath + @"\Otako Craft Mods\mods").Length > 140) PlayButton.IsEnabled = true; else PlayButton.Content = "Instala todo primero";
+                if (packUpdate) { PlayButton.Content = "Actualización disponible"; InstallAll.Content = "Actualizar y jugar"; }
             }
             catch (Exception err)
             {
@@ -52,13 +53,13 @@ namespace OCM_Installer_V2
             Application.Current.Dispatcher.Invoke(new Action(() =>
             {
                 ProgresoInstalaciones.Value = e.ProgressPercentage;
-                Instalar_todo.Content = prog + "%";
+                InstallAll.Content = prog + "%";
             }));
         }
 
         private void Downloader_DownloadFileCompleted(object? sender, System.ComponentModel.AsyncCompletedEventArgs e)
         {
-            Application.Current.Dispatcher.Invoke(new Action(() => { ProgresoInstalaciones.Value = 0; Instalar_todo.Content = "Cargando..."; }));
+            Application.Current.Dispatcher.Invoke(new Action(() => { ProgresoInstalaciones.Value = 0; InstallAll.Content = "Cargando..."; }));
         }
         private void Launcher_FileChanged(CmlLib.Core.Downloader.DownloadFileChangedEventArgs e)
         {
@@ -75,8 +76,8 @@ namespace OCM_Installer_V2
 
         private void InstallAllButton_Click(object sender, RoutedEventArgs e)
         {
-            Instalar_todo.IsEnabled = false;
-            var computerMemory = Util.GetMemoryMb();
+            InstallAll.IsEnabled = false;
+            var computerMemory = GetMemoryMb();
             if (computerMemory == null) { computerMemory = 4096; return; }
             var max = computerMemory / 2;
             if (max <= 4096) max = 4096; else if (max > 8192) max = 8192;
@@ -97,30 +98,40 @@ namespace OCM_Installer_V2
             Application.Current.Dispatcher.Invoke(new Action(async () =>
             {
                 try
-                {
+                {   
                     if (Directory.Exists(installPath + @"\Otako Craft Mods\mods")) { Directory.Delete(installPath + @"\Otako Craft Mods\mods", true); PlayButton.IsEnabled = false; }
-                    MSession session = await loginWindow.ShowLoginDialog();
+                    
+                    string customUsername = File.ReadAllText(usernameFile);
+                    bool isUserPremium = false;
+                    
+                    if (string.IsNullOrEmpty(customUsername) || IsLauncherPremiumOnly()) isUserPremium = true;
+
+                    MSession account = isUserPremium ? await loginWindow.ShowLoginDialog() : MSession.GetOfflineSession(customUsername);
+                    var premiumAccount = new MSession(account.Username, account.AccessToken, account.UUID);
                     loginWindow.Close();
+                    
                     await downloader.DownloadFileTaskAsync("https://otcr.tk/pack.zip", installPath + @"\Otako Craft Mods\pack.zip");
                     System.IO.Compression.ZipFile.ExtractToDirectory(installPath + @"\Otako Craft Mods\pack.zip", installPath + @"\Otako Craft Mods", true);
+                    
                     WriteCustomModConfigs();
+                    
                     DownloadedFiles.Visibility = Visibility.Visible;
                     DownloadedFilePercentage.Visibility = Visibility.Visible;
-                    Instalar_todo.FontSize = 21.7;
-                    Instalar_todo.Content = "Descargando y comprobando archivos";
+                    InstallAll.FontSize = 21.7;
+                    InstallAll.Content = "Descargando y comprobando archivos";
+                    
                     File.Delete(installPath + @"\Otako Craft Mods\pack.zip");
+                    
                     if (packUpdate)
                     {
-                        var latestPackVersion = httpClient.GetStringAsync("https://otcr.tk/packversion.txt").Result;
-                        string packVersionFile = Globals.AppDirectory + @"\PackVersion.txt";
+                        string latestPackVersion = httpClient.GetStringAsync("https://otcr.tk/packversion.txt").Result;
                         File.WriteAllText(packVersionFile, latestPackVersion);
                     }
-                    var ses = new MSession(session.Username, session.AccessToken, session.UUID);
-                    if (!ses.CheckIsValid()) { ShowMessageBox("Sesión no válida", "Tu sesión no es válida, espera unos minutos y vuelve a intentarlo."); return; }
+                    
                     var process = await launcher.CreateProcessAsync("Otako Craft Mods", new MLaunchOption()
                     {
                         GameLauncherName = "Otako Craft Launcher",
-                        Session = ses,
+                        Session = isUserPremium ? premiumAccount : MSession.GetOfflineSession(customUsername),
                         Path = path,
                         MaximumRamMb = (int)max,
                         VersionType = "Otako Craft",
@@ -143,7 +154,7 @@ namespace OCM_Installer_V2
 
         private void PlayButton_Click(object sender, RoutedEventArgs e)
         {
-            Instalar_todo.IsEnabled = false;
+            InstallAll.IsEnabled = false;
             PlayButton.IsEnabled = false;
             PlayButton.Content = "Cargando juego...";
 
@@ -164,14 +175,20 @@ namespace OCM_Installer_V2
             {
                 try
                 {
-                    MSession session = await loginWindow.ShowLoginDialog();
+                    string usernameFile = Globals.AppDirectory + @"\Username.txt";
+                    if (!File.Exists(usernameFile)) { var f = File.Create(usernameFile); f.Close(); }
+                    string customUsername = File.ReadAllText(usernameFile);
+                    bool isUserPremium = false;
+
+                    if (string.IsNullOrEmpty(customUsername) || IsLauncherPremiumOnly()) isUserPremium = true;
+
+                    MSession account = isUserPremium ? await loginWindow.ShowLoginDialog() : MSession.GetOfflineSession(customUsername);
+                    var premiumAccount = new MSession(account.Username, account.AccessToken, account.UUID);
                     loginWindow.Close();
-                    var ses = new MSession(session.Username, session.AccessToken, session.UUID);
-                    if (!ses.CheckIsValid()) { ShowMessageBox("Sesión no válida", "Tu sesión no es válida, espera unos minutos y vuelve a intentarlo."); return; }
                     var process = await launcher.CreateProcessAsync("Otako Craft Mods", new MLaunchOption()
                     {
                         GameLauncherName = "Otako Craft Launcher",
-                        Session = ses,
+                        Session = isUserPremium ? premiumAccount : MSession.GetOfflineSession(customUsername),
                         Path = path,
                         MaximumRamMb = (int)max,
                         VersionType = "Otako Craft",

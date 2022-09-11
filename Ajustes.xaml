@@ -8,7 +8,7 @@
       Tag="Ajustes" WindowTitle="Ajustes">
 
     <Grid Width="854" Height="425" HorizontalAlignment="Center" VerticalAlignment="Center">
-        <ui:CardExpander x:Name="CustomInstallLocation" Header="Ubicación de instalación de los archivos" HorizontalAlignment="Center" Margin="0,60,0,0" VerticalAlignment="Top" Icon="Folder48" Background="#FF272727" UseLayoutRounding="True" Width="366" Padding="14,14,14,10">
+        <ui:CardExpander x:Name="CustomInstallLocation" Header="Ubicación de instalación de los archivos" HorizontalAlignment="Center" Margin="0,45,0,0" VerticalAlignment="Top" Icon="Folder48" Background="#FF272727" UseLayoutRounding="True" Width="366" Padding="14,14,14,10">
             <ui:CardExpander.Effect>
                 <DropShadowEffect/>
             </ui:CardExpander.Effect>
@@ -32,7 +32,7 @@
                 <ui:Button x:Name="ResetCustomInstallLocationBtn" Content="Restablecer" Height="38" Width="98" Background="#FF343434" HorizontalAlignment="Center" Click="ResetCustomInstallLocationBtn_Click"/>
             </Grid>
         </ui:CardExpander>
-        <ui:Snackbar x:Name="InstLocChangedNoti" HorizontalAlignment="Center" Margin="0,314,0,0" VerticalAlignment="Top" Width="434" UseLayoutRounding="True" Height="79" Icon="ArrowReset48" Timeout="10000" CloseButtonEnabled="False">
+        <ui:Snackbar x:Name="InstLocChangedNoti" HorizontalAlignment="Center" Margin="0,320,0,0" VerticalAlignment="Top" Width="434" UseLayoutRounding="True" Height="79" Icon="ArrowReset48" Timeout="10000" CloseButtonEnabled="False">
             <ui:Snackbar.IconForeground>
                 <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
                     <LinearGradientBrush.RelativeTransform>
@@ -55,5 +55,28 @@
                 <ui:Button x:Name="RestartBtn" Content="Reiniciar" Margin="295,0,0,0" Height="39" Width="105" Click="RestartBtn_Click"/>
             </Grid>
         </ui:Snackbar>
+        <ui:CardExpander x:Name="ShadersBtn" Header="Instalar shaders" HorizontalAlignment="Center" Margin="0,182,0,0" VerticalAlignment="Top" Icon="Folder48" Background="#FF272727" UseLayoutRounding="True" Width="366" Padding="14,14,14,10" Visibility="Hidden">
+            <ui:CardExpander.Effect>
+                <DropShadowEffect/>
+            </ui:CardExpander.Effect>
+            <ui:CardExpander.IconForeground>
+                <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                    <d:LinearGradientBrush.RelativeTransform>
+                        <TransformGroup>
+                            <ScaleTransform CenterY="0.5" CenterX="0.5"/>
+                            <SkewTransform CenterX="0.5" CenterY="0.5"/>
+                            <RotateTransform Angle="90" CenterX="0.5" CenterY="0.5"/>
+                            <TranslateTransform/>
+                        </TransformGroup>
+                    </d:LinearGradientBrush.RelativeTransform>
+                    <GradientStop Color="Magenta"/>
+                    <GradientStop Color="Cyan" Offset="1"/>
+                </LinearGradientBrush>
+            </ui:CardExpander.IconForeground>
+            <Grid HorizontalAlignment="Center" VerticalAlignment="Center" Height="39" Width="336">
+                <ui:Button x:Name="ShowShadersFolder" Content="Abrir carpeta" Margin="228,0,0,0" Height="38" Width="108" Background="#FF343434" Click="ShowShadersFolder_Click"/>
+                <ui:Button x:Name="SelectShadersFile" Content="Añadir automáticamente" Width="177" Height="38" Background="#FF343434" Click="SelectShadersFile_Click"/>
+            </Grid>
+        </ui:CardExpander>
     </Grid>
 </ui:UiPage>

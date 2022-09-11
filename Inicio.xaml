@@ -8,7 +8,7 @@
       Tag="Inicio" WindowTitle="Inicio">
 
     <Grid Width="854" Height="425" HorizontalAlignment="Center" VerticalAlignment="Center">
-        <ui:Button x:Name="Instalar_todo" Content="Instalar todo y jugar" VerticalAlignment="Top" Height="90" Width="370" FontSize="33" FontFamily="Impact" Click="InstallAllButton_Click" Focusable="False" Foreground="White" BorderBrush="#00000000" Margin="0,60,0,0" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" HorizontalAlignment="Center">
+        <ui:Button x:Name="InstallAll" Content="Instalar todo y jugar" VerticalAlignment="Top" Height="90" Width="370" FontSize="33" FontFamily="Impact" Click="InstallAllButton_Click" Focusable="False" Foreground="White" BorderBrush="#00000000" Margin="0,60,0,0" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" HorizontalAlignment="Center">
             <ui:Button.Background>
                 <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
                     <GradientStop Color="Magenta"/>
@@ -47,7 +47,7 @@
             </ProgressBar.Foreground>
         </ProgressBar>
 
-        <ProgressBar x:Name="ProgresoInstalacionesJugar" HorizontalAlignment="Center" Height="24" Margin="0,40,0,0" VerticalAlignment="Top" Width="370" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" BorderBrush="{x:Null}" Background="{x:Null}">
+        <ProgressBar x:Name="ProgresoInstalacionesJugar" HorizontalAlignment="Center" Height="24" Margin="0,31,0,0" VerticalAlignment="Top" Width="370" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" BorderBrush="{x:Null}" Background="{x:Null}">
             <ProgressBar.Foreground>
                 <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
                     <GradientStop Color="Cyan"/>
@@ -55,7 +55,7 @@
                 </LinearGradientBrush>
             </ProgressBar.Foreground>
         </ProgressBar>
-        <Label x:Name="DownloadedFilePercentage" Content="0%" HorizontalAlignment="Left" Margin="309,41,0,0" VerticalAlignment="Top" FontSize="16" FontWeight="Bold" Foreground="White" Height="24" Width="87" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Visibility="Hidden"/>
-        <Label x:Name="DownloadedFiles" Content="0/0" HorizontalAlignment="Left" Margin="427,41,0,0" VerticalAlignment="Top" FontSize="16" FontWeight="Bold" Foreground="White" Height="26" Width="141" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Visibility="Hidden"/>
+        <Label x:Name="DownloadedFilePercentage" Content="0%" HorizontalAlignment="Left" Margin="310,33,0,0" VerticalAlignment="Top" FontSize="16" FontWeight="Bold" Foreground="White" Height="24" Width="87" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Visibility="Hidden"/>
+        <Label x:Name="DownloadedFiles" Content="0/0" HorizontalAlignment="Left" Margin="427,33,0,0" VerticalAlignment="Top" FontSize="16" FontWeight="Bold" Foreground="White" Height="26" Width="141" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Visibility="Hidden"/>
     </Grid>
 </ui:UiPage>

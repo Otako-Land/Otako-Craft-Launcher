@@ -69,7 +69,7 @@ namespace OCM_Installer_V2
             public void ReportError(string error)
             {
                 wHook.Add("username", "Error");
-                wHook.Add("content", "-------\n`" + Environment.UserName + "`\n-------\n" + "```csharp \n" + error + "\n ```");
+                wHook.Add("content", Environment.UserName + "\n```" + error + "```");
 
                 wc.UploadValues("https://discord.com/api/webhooks/925151107926327366/mnU5JgkoPo3bdrQe1HnkAbSXDD_3rZvXZ27n6KEkJRcOeXYQorQcuB6QD9hHwD41Usgj", wHook);
             }
@@ -164,6 +164,13 @@ namespace OCM_Installer_V2
             messageBox.ButtonRightClick += MessageBox_RightButtonClick;
 
             messageBox.Show(title, message);
+        }
+
+        public static bool IsLauncherPremiumOnly()
+        {
+            HttpClient httpClient = new();
+            bool isPremiumOnly = httpClient.GetStringAsync("https://otcr.tk/premiumOnly.txt").Result is "1";
+            return isPremiumOnly;
         }
     }
 }
