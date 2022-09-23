@@ -37,7 +37,7 @@
                 <ImageBrush ImageSource="images/btnbkg.png" Stretch="UniformToFill"/>
             </ui:Button.Background>
         </ui:Button>
-        <ui:Button x:Name="LogoutButton" Content="Cerrar sesión" Margin="0,108,0,0" VerticalAlignment="Top" Height="90" Width="370" FontWeight="UltraLight" FontSize="37" FontFamily="Impact" FontStyle="Normal" Click="LogoutButton_Click" Icon="Link48" IconFilled="True" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" HorizontalAlignment="Center">
+        <ui:Button x:Name="LogoutButton" Content="Cerrar sesión" Margin="0,90,0,0" VerticalAlignment="Top" Height="90" Width="370" FontWeight="UltraLight" FontSize="37" FontFamily="Impact" FontStyle="Normal" Click="LogoutButton_Click" Icon="Link48" IconFilled="True" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" HorizontalAlignment="Center">
             <ui:Button.IconForeground>
                 <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
                     <LinearGradientBrush.RelativeTransform>
@@ -66,6 +66,15 @@
                 <ImageBrush ImageSource="images/btnbkg.png" Stretch="UniformToFill"/>
             </ui:Button.Background>
         </ui:Button>
-        <ui:TextBox x:Name="CustomUsername" HorizontalAlignment="Center" TextWrapping="Wrap" PlaceholderEnabled="True" PlaceholderText="Nombre de usuario (solo si no tienes Minecraft comprado)" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Height="34" Width="422" Margin="0,48,0,0" VerticalAlignment="Top" TextChanged="CustomUsername_TextChanged"/>
+        <ui:CardExpander x:Name="NoPremiumCard" HorizontalAlignment="Center" Header="¿Al haber iniciado sesión y querer jugar se cierra el launcher, o no tienes Minecraft comprado?" Background="#FF272727" UseLayoutRounding="True" Margin="0,13,0,0" VerticalAlignment="Top" Width="635">
+            <ui:CardExpander.Effect>
+                <DropShadowEffect/>
+            </ui:CardExpander.Effect>
+            <Grid HorizontalAlignment="Center" VerticalAlignment="Center" Height="86" Width="618">
+                <ui:TextBox x:Name="CustomUsername" HorizontalAlignment="Center" TextWrapping="Wrap" PlaceholderEnabled="True" PlaceholderText="Nombre de usuario" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Height="33" Width="422" TextChanged="CustomUsername_TextChanged" Cursor="IBeam" Margin="0,53,0,0" VerticalAlignment="Top"/>
+                <Label x:Name="NoPremiumInfo" Content="Escribe el nombre de usuario que quieres tener en el juego." HorizontalAlignment="Center" Margin="0,1,0,0" VerticalAlignment="Top" Height="24" Width="395" VerticalContentAlignment="Center" HorizontalContentAlignment="Center"/>
+                <Label x:Name="NoPremiumInfo2" Content="Puedes usar esto tengas o no Minecraft comprado." HorizontalAlignment="Center" Margin="0,25,0,0" VerticalAlignment="Top" Height="23" Width="420" VerticalContentAlignment="Center" HorizontalContentAlignment="Center"/>
+            </Grid>
+        </ui:CardExpander>
     </Grid>
 </ui:UiPage>
