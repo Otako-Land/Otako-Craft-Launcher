@@ -66,7 +66,7 @@
                 <ImageBrush ImageSource="images/btnbkg.png" Stretch="UniformToFill"/>
             </ui:Button.Background>
         </ui:Button>
-        <ui:CardExpander x:Name="NoPremiumCard" HorizontalAlignment="Center" Header="¿Al haber iniciado sesión y querer jugar se cierra el launcher, o no tienes Minecraft comprado?" Background="#FF272727" UseLayoutRounding="True" Margin="0,13,0,0" VerticalAlignment="Top" Width="635">
+        <ui:CardExpander x:Name="NoPremiumCard" HorizontalAlignment="Center" Header="¿No tienes Minecraft comprado o no quieres iniciar sesión con tu cuenta de Microsoft?" Background="#FF272727" UseLayoutRounding="True" Margin="0,13,0,0" VerticalAlignment="Top" Width="591">
             <ui:CardExpander.Effect>
                 <DropShadowEffect/>
             </ui:CardExpander.Effect>
