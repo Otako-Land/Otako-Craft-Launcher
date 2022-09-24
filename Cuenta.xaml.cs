@@ -1,4 +1,4 @@
-﻿using CmlLib.Core.Auth.Microsoft.UI.Wpf;
+﻿using CmlLib.Core.Auth.Microsoft.UI.WinForm;
 using CmlLib.Core.Auth;
 using System;
 using System.Windows;
@@ -22,10 +22,10 @@ namespace OCM_Installer_V2
         {
             try
             {
-                MicrosoftLoginWindow loginWindow = new()
+                MicrosoftLoginForm loginWindow = new()
                 {
                     LoadingText = "Cargando...\nEspera un momento plis :D",
-                    Title = "Iniciar sesión con tu cuenta de Microsoft | ¿Para qué? Para abrir el juego usando tu cuenta :)"
+                    Text = "Iniciar sesión con tu cuenta de Microsoft | ¿Para qué? Para abrir el juego usando tu cuenta :)"
                 };
                 MSession session = await loginWindow.ShowLoginDialog();
                 loginWindow.Close();
@@ -45,10 +45,11 @@ namespace OCM_Installer_V2
         {
             try
             {
-                MicrosoftLoginWindow logoutWindow = new()
+                MicrosoftLoginForm logoutWindow = new()
                 {
                     LoadingText = "Cerrando sesión...\nEspera un momento plis :D",
-                    Title = "Cerrar sesión de tu cuenta de Microsoft"
+                    Text = "Cerrar sesión de tu cuenta de Microsoft"
+                    
                 };
                 logoutWindow.ShowLogoutDialog();
                 logoutWindow.Close();

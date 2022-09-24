@@ -3,7 +3,7 @@ using System;
 using System.Windows;
 using CmlLib.Core;
 using CmlLib.Core.Auth;
-using CmlLib.Core.Auth.Microsoft.UI.Wpf;
+using CmlLib.Core.Auth.Microsoft.UI.WinForm;
 using Downloader;
 using System.IO;
 using System.Net.Http;
@@ -13,7 +13,6 @@ namespace OCM_Installer_V2
 {
     public partial class Inicio
     {
-        readonly Cuenta Cuenta = new();
         readonly HttpClient httpClient = new();
         readonly bool packUpdate = false;
         readonly string installPath = Globals.CustomLocation;
@@ -89,10 +88,10 @@ namespace OCM_Installer_V2
             downloader.DownloadFileCompleted += Downloader_DownloadFileCompleted;
             launcher.FileChanged += Launcher_FileChanged;
             launcher.ProgressChanged += Launcher_ProgressChanged;
-            MicrosoftLoginWindow loginWindow = new()
+            MicrosoftLoginForm loginWindow = new()
             {
                 LoadingText = "Cargando...\nEspera un momento plis :D",
-                Title = "Iniciar sesión con tu cuenta de Microsoft | ¿Para qué? Para abrir el juego usando tu cuenta :)"
+                Text = "Iniciar sesión con tu cuenta de Microsoft | ¿Para qué? Para abrir el juego usando tu cuenta :)"
             };
 
             Application.Current.Dispatcher.Invoke(new Action(async () =>
@@ -165,10 +164,11 @@ namespace OCM_Installer_V2
             System.Net.ServicePointManager.DefaultConnectionLimit = 256;
             var path = new MinecraftPath(installPath + @"\Otako Craft Mods");
             var launcher = new CMLauncher(installPath + @"\Otako Craft Mods");
-            MicrosoftLoginWindow loginWindow = new()
+            MicrosoftLoginForm loginWindow = new()
             {
                 LoadingText = "Cargando...\nEspera un momento plis :D",
-                Title = "Iniciar sesión con tu cuenta de Microsoft | ¿Para qué? Para abrir el juego usando tu cuenta :)"
+                Text = "Iniciar sesión con tu cuenta de Microsoft | ¿Para qué? Para abrir el juego usando tu cuenta :)",
+                
             };
 
             Application.Current.Dispatcher.Invoke(new Action(async () =>
