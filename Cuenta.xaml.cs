@@ -33,9 +33,13 @@ namespace OCM_Installer_V2
             }
             catch (Exception err)
             {
-                if (!err.Message.Contains("The user has denied access") && !err.Message.Contains("User cancelled login"))
+                if (!err.Message.Contains("The user has denied access") && !err.Message.Contains("User cancelled login") && !err.Message.Contains("mojang_noprofile"))
                 {
                     new Reporter().ReportError(err.ToString());
+                }
+                if (err.Message.Contains("mojang_noprofile"))
+                {
+                    ShowMessageBox("No tienes Minecraft comprado", "Has iniciado sesión con una cuenta que no tiene Minecraft comprado.\nUsa la opción que hay arriba del botón de cerrar sesión.\nSi el servidor está en modo de solo cuentas compradas, no tendrás opción de jugar sin Minecraft comprado.");
                 }
                 return;
             }
