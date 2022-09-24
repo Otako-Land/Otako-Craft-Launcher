@@ -28,8 +28,8 @@ namespace OCM_Installer_V2
                     Text = "Iniciar sesión | Recuerda que tienes que tener Minecraft comprado para que esto sirva"
                 };
                 MSession session = await loginWindow.ShowLoginDialog();
-                loginWindow.Close();
                 ShowMessageBox("Ya tienes la sesión iniciada", "Hola " + session.Username);
+                loginWindow.Close();
             }
             catch (Exception err)
             {
