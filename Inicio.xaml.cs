@@ -91,7 +91,7 @@ namespace OCM_Installer_V2
             MicrosoftLoginForm loginWindow = new()
             {
                 LoadingText = "Cargando...\nEspera un momento plis :D",
-                Text = "Iniciar sesión con tu cuenta de Microsoft | ¿Para qué? Para abrir el juego usando tu cuenta :)"
+                Text = "Iniciar sesión con tu cuenta de Microsoft | Recuerda que tienes que tener Minecraft comprado para que esto sirva"
             };
 
             Application.Current.Dispatcher.Invoke(new Action(async () =>
@@ -167,7 +167,7 @@ namespace OCM_Installer_V2
             MicrosoftLoginForm loginWindow = new()
             {
                 LoadingText = "Cargando...\nEspera un momento plis :D",
-                Text = "Iniciar sesión con tu cuenta de Microsoft | ¿Para qué? Para abrir el juego usando tu cuenta :)",
+                Text = "Iniciar sesión con tu cuenta de Microsoft | Recuerda que tienes que tener Minecraft comprado para que esto sirva",
                 
             };
 
