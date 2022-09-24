@@ -94,7 +94,7 @@ namespace OCM_Installer_V2
             var max = computerMemory / 2;
             if (max <= 4096) max = 4096; else if (max > 8192) max = 8192;
             System.Net.ServicePointManager.DefaultConnectionLimit = 256;
-            var downloader = new DownloadService();
+            var downloader = new DownloadService(new DownloadConfiguration(){ChunkCount = 8,ParallelDownload = true,ParallelCount = 8});
             var path = new MinecraftPath(installPath + @"\Otako Craft Mods");
             var launcher = new CMLauncher(installPath + @"\Otako Craft Mods");
             downloader.DownloadProgressChanged += Downloader_DownloadProgressChanged;
