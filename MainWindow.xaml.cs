@@ -24,7 +24,7 @@ namespace OCM_Installer_V2
                 CurrentVersion.Content = "v" + manager.CurrentlyInstalledVersion().ToString();
                 MainFrame.Navigate(Inicio);
 
-                if (!IsLauncherPremiumOnly()) Cuenta.CustomUsername.Visibility = Visibility.Visible;
+                if (!IsLauncherPremiumOnly()) Cuenta.NoPremiumCard.Visibility = Visibility.Visible;
             }
             catch (Exception err)
             {
