@@ -166,8 +166,8 @@ namespace OCM_Installer_V2
                     if (err.Message.Contains("mojang_noprofile"))
                     {
                         ShowMessageBox("No tienes Minecraft comprado", "Has iniciado sesión con una cuenta que no tiene Minecraft comprado.\nVe al apartado Cuenta y ponte un nombre de usuario para poder jugar.\nSi el servidor está en modo de solo cuentas compradas, no tendrás opción de jugar sin Minecraft comprado.");
-
                     }
+                    InstallAll.IsEnabled = true;
                     return;
                 }
             }));
