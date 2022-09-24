@@ -75,7 +75,20 @@ namespace OCM_Installer_V2
 
         private void InstallAllButton_Click(object sender, RoutedEventArgs e)
         {
+            PrepareToPlay(true);
+        }
+
+
+        private void PlayButton_Click(object sender, RoutedEventArgs e)
+        {
+            PrepareToPlay(false);
+        }
+
+        public void PrepareToPlay(bool doInstallation)
+        {
             InstallAll.IsEnabled = false;
+            PlayButton.IsEnabled = false;
+            PlayButton.Content = doInstallation ? "Instalación en curso" : "Cargando juego...";
             var computerMemory = GetMemoryMb();
             if (computerMemory == null) { computerMemory = 4096; return; }
             var max = computerMemory / 2;
@@ -91,100 +104,47 @@ namespace OCM_Installer_V2
             MicrosoftLoginForm loginWindow = new()
             {
                 LoadingText = "Cargando...\nEspera un momento plis :D",
-                Text = "Iniciar sesión con tu cuenta de Microsoft | Recuerda que tienes que tener Minecraft comprado para que esto sirva"
+                Text = "Iniciar sesión | Recuerda que tienes que tener Minecraft comprado para que esto sirva"
             };
 
             Application.Current.Dispatcher.Invoke(new Action(async () =>
             {
                 try
-                {   
-                    if (Directory.Exists(installPath + @"\Otako Craft Mods\mods")) { Directory.Delete(installPath + @"\Otako Craft Mods\mods", true); PlayButton.IsEnabled = false; }
-                    
+                {
+                    if (Directory.Exists(installPath + @"\Otako Craft Mods\mods") && doInstallation)
+                    {
+                        Directory.Delete(installPath + @"\Otako Craft Mods\mods", true);
+                        PlayButton.IsEnabled = false;
+                    }
+
                     string customUsername = File.ReadAllText(usernameFile);
                     bool isUserPremium = false;
-                    
+
                     if (string.IsNullOrEmpty(customUsername) || IsLauncherPremiumOnly()) isUserPremium = true;
 
                     MSession account = isUserPremium ? await loginWindow.ShowLoginDialog() : MSession.GetOfflineSession(customUsername);
                     var premiumAccount = new MSession(account.Username, account.AccessToken, account.UUID);
                     loginWindow.Close();
-                    
-                    await downloader.DownloadFileTaskAsync("https://otcr.tk/pack.zip", installPath + @"\Otako Craft Mods\pack.zip");
-                    System.IO.Compression.ZipFile.ExtractToDirectory(installPath + @"\Otako Craft Mods\pack.zip", installPath + @"\Otako Craft Mods", true);
-                    
+
+                    if (doInstallation)
+                    {
+                        await downloader.DownloadFileTaskAsync("https://otcr.tk/pack.zip", installPath + @"\Otako Craft Mods\pack.zip");
+                        System.IO.Compression.ZipFile.ExtractToDirectory(installPath + @"\Otako Craft Mods\pack.zip", installPath + @"\Otako Craft Mods", true);
+                        DownloadedFiles.Visibility = Visibility.Visible;
+                        DownloadedFilePercentage.Visibility = Visibility.Visible;
+                        InstallAll.FontSize = 21.7;
+                        InstallAll.Content = "Descargando y comprobando archivos";
+                        File.Delete(installPath + @"\Otako Craft Mods\pack.zip");
+                    }
+
                     WriteCustomModConfigs();
-                    
-                    DownloadedFiles.Visibility = Visibility.Visible;
-                    DownloadedFilePercentage.Visibility = Visibility.Visible;
-                    InstallAll.FontSize = 21.7;
-                    InstallAll.Content = "Descargando y comprobando archivos";
-                    
-                    File.Delete(installPath + @"\Otako Craft Mods\pack.zip");
-                    
+
                     if (packUpdate)
                     {
                         string latestPackVersion = httpClient.GetStringAsync("https://otcr.tk/packversion.txt").Result;
                         File.WriteAllText(packVersionFile, latestPackVersion);
                     }
-                    
-                    var process = await launcher.CreateProcessAsync("Otako Craft Mods", new MLaunchOption()
-                    {
-                        GameLauncherName = "Otako Craft Launcher",
-                        Session = isUserPremium ? premiumAccount : MSession.GetOfflineSession(customUsername),
-                        Path = path,
-                        MaximumRamMb = (int)max,
-                        VersionType = "Otako Craft",
-                        StartVersion = new CmlLib.Core.Version.MVersion("Otako Craft Mods")
-                    });
-                    process.Start();
-                    Environment.Exit(0);
-                }
-                catch (Exception err)
-                {
-                    if (!err.Message.Contains("The user has denied access") && !err.Message.Contains("User cancelled login"))
-                    {
-                        new Reporter().ReportError(err.ToString());
-                    }
-                    return;
-                }
-            }));
-        }
 
-
-        private void PlayButton_Click(object sender, RoutedEventArgs e)
-        {
-            InstallAll.IsEnabled = false;
-            PlayButton.IsEnabled = false;
-            PlayButton.Content = "Cargando juego...";
-
-            var computerMemory = GetMemoryMb();
-            if (computerMemory == null) { computerMemory = 4096; return; }
-            var max = computerMemory / 2;
-            if (max <= 4096) max = 4096; else if (max > 8192) max = 8192;
-            System.Net.ServicePointManager.DefaultConnectionLimit = 256;
-            var path = new MinecraftPath(installPath + @"\Otako Craft Mods");
-            var launcher = new CMLauncher(installPath + @"\Otako Craft Mods");
-            MicrosoftLoginForm loginWindow = new()
-            {
-                LoadingText = "Cargando...\nEspera un momento plis :D",
-                Text = "Iniciar sesión con tu cuenta de Microsoft | Recuerda que tienes que tener Minecraft comprado para que esto sirva",
-                
-            };
-
-            Application.Current.Dispatcher.Invoke(new Action(async () =>
-            {
-                try
-                {
-                    string usernameFile = Globals.AppDirectory + @"\Username.txt";
-                    if (!File.Exists(usernameFile)) { var f = File.Create(usernameFile); f.Close(); }
-                    string customUsername = File.ReadAllText(usernameFile);
-                    bool isUserPremium = false;
-
-                    if (string.IsNullOrEmpty(customUsername) || IsLauncherPremiumOnly()) isUserPremium = true;
-
-                    MSession account = isUserPremium ? await loginWindow.ShowLoginDialog() : MSession.GetOfflineSession(customUsername);
-                    var premiumAccount = new MSession(account.Username, account.AccessToken, account.UUID);
-                    loginWindow.Close();
                     var process = await launcher.CreateProcessAsync("Otako Craft Mods", new MLaunchOption()
                     {
                         GameLauncherName = "Otako Craft Launcher",

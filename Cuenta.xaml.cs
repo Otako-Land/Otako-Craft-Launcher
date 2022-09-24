@@ -25,7 +25,7 @@ namespace OCM_Installer_V2
                 MicrosoftLoginForm loginWindow = new()
                 {
                     LoadingText = "Cargando...\nEspera un momento plis :D",
-                    Text = "Iniciar sesión con tu cuenta de Microsoft | Recuerda que tienes que tener Minecraft comprado para que esto sirva"
+                    Text = "Iniciar sesión | Recuerda que tienes que tener Minecraft comprado para que esto sirva"
                 };
                 MSession session = await loginWindow.ShowLoginDialog();
                 loginWindow.Close();
